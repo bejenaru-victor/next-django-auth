@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
-// TODO: Logout user and delete session on frontend. Hint: Wrapper component
+
 export default async function Home() {
   const session = await getServerSession(authOptions)
 

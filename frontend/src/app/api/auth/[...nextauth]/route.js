@@ -26,7 +26,6 @@ export const authOptions = {
 
                 // Register
                 if (credentials?.username && credentials?.password2) {
-                    console.log('going to register!')
                     url = "dj-rest-auth/registration/"
                     body = {
                         username: credentials?.username,
@@ -44,16 +43,13 @@ export const authOptions = {
                 })
 
                 const user = await res.json()
-                console.log('response data', user, res.status)
                 if ((res.status == 200 && user) || (user?.access)) {
                     // Any object returned will be saved in `user` property of the JWT
                     return user
                 } else {
                     // If you return null then an error will be displayed advising the user to check their details.
-                    if (credentials?.username && credentials?.password2) {
-                        console.log('throwing error')
+                    if (credentials?.username && credentials?.password2)
                         throw new Error(JSON.stringify(user))
-                    }
                     return null
                     // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
                 }
@@ -63,6 +59,10 @@ export const authOptions = {
 
     session: {
         strategy: 'jwt',
+    },
+
+    jwt: {
+        secureCookie: true,
     },
 
     callbacks:{
@@ -80,7 +80,7 @@ export const authOptions = {
             }
             
             if (user)
-                token = {...token, ...user}
+                token = {...token, ...user, exp: Date.now(), iat: Date.now()}
 
             else if (trigger === "update") 
                 token.user = await get_user(token.access)
